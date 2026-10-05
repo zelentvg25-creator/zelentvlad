@@ -9,9 +9,8 @@ from django.urls import reverse
 class Category(models.Model):
     category = models.CharField(u'Категорія',
 
-                                max_length=250, help_text=u'Максимум 250 символів')
+                                max_length=250, help_text=u'Максимум 250 сим.')
     slug = models.SlugField(u'Слаг')
-
     objects = models.Manager()
 
     class Meta:
@@ -20,6 +19,14 @@ class Category(models.Model):
 
     def __str__(self):
         return self.category
+
+    def get_absolute_url(self):
+        try:
+            url = reverse('articles-category-list',
+                          kwargs={'slug': self.slug})
+        except:
+            url = "/"
+        return url
 
 
 from django.db import models
