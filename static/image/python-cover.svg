@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title">
+  <title id="title">Python programming cover</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#102b43"/>
+      <stop offset="1" stop-color="#176b67"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#77e0cb"/>
+      <stop offset="1" stop-color="#e7bb72"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="420" rx="28" fill="url(#bg)"/>
+  <circle cx="525" cy="92" r="108" fill="#77e0cb" opacity=".09"/>
+  <circle cx="94" cy="360" r="145" fill="#e7bb72" opacity=".08"/>
+  <rect x="132" y="72" width="376" height="276" rx="20" fill="#0a1827" opacity=".72" stroke="#77e0cb" stroke-opacity=".4"/>
+  <path d="M198 155l-42 34 42 34M442 155l42 34-42 34M352 137l-64 105" fill="none" stroke="url(#glow)" stroke-linecap="round" stroke-linejoin="round" stroke-width="13"/>
+  <circle cx="176" cy="285" r="7" fill="#77e0cb"/>
+  <circle cx="202" cy="285" r="7" fill="#e7bb72"/>
+  <path d="M228 285h182" stroke="#dcebf2" stroke-linecap="round" stroke-opacity=".55" stroke-width="8"/>
+  <text x="320" y="390" fill="#f1f5f9" font-family="Segoe UI, sans-serif" font-size="19" letter-spacing="5" text-anchor="middle">PYTHON · ПЕРШІ КРОКИ</text>
+</svg>

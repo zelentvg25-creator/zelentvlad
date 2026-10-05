@@ -1,59 +1,28 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}Публікації — Персональний блог{% endblock %}
 
-<html lang="en">
+{% block content %}
+<section aria-labelledby="articles-title">
+    <h1 class="page-heading" id="articles-title">
+        {% if category %}{{ category }}{% else %}Усі публікації{% endif %}
+    </h1>
+    <p class="page-intro">Добірка матеріалів блогу — обирайте тему та читайте.</p>
 
-<head>
-
-    <meta charset="UTF-8">
-
-    <title>Публікації</title>
-
-</head>
-
-<body>
-
-    Публікації <br/>
-
-
-
-    {% if category %} {{ category }} {% endif %}
-
-
-
-    {% for item in items %}
-
-    <div class="articles-row">
-
-            <a href="{{ item.get_absolute_url }}">
-
-                 <h4>{{ item.title }}</h4>
-
-            </a>
-
-            <h5>
-
-                  {{ item.pub_date|date:"j E Y"|safe|linebreaks }}
-
-            </h5>
-
-            <p>
-
-                  {{ item.description|safe|escape|striptags|truncatewords_html:32 }}
-
-            </p>
-
-            <div class="container-image">
-
-                 <img class="img" src="{{ item.images.all.0.image.url }}" alt="" />
-
-            </div>
-
-            <div class='clearfix'></div>
-
+    <div class="article-grid">
+        {% for item in items %}
+            <article class="article-card">
+                <div class="article-card-content">
+                    <h2 class="article-title">
+                        <a href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+                    </h2>
+                    <p class="article-date">{{ item.pub_date|date:"d E Y" }}</p>
+                    <p class="article-excerpt">{{ item.body|striptags|truncatewords:32 }}</p>
+                </div>
+                <img class="article-card-image" src="{{ item.cover_image_url }}" alt="{{ item.title }}">
+            </article>
+        {% empty %}
+            <div class="empty-state">У цій категорії поки немає публікацій.</div>
+        {% endfor %}
     </div>
-
-    {% endfor %}
-
-</body>
-
-</html>
+</section>
+{% endblock %}

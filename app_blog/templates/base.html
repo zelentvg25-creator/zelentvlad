@@ -1,0 +1,364 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101827">
+    <title>{% block title %}Персональний блог{% endblock %}</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --page-bg: #101827;
+            --surface: rgba(24, 37, 57, 0.9);
+            --surface-hover: #22344e;
+            --text: #f1f5f9;
+            --muted: #bdc9d8;
+            --accent: #67d5c2;
+            --accent-strong: #8de7d6;
+            --border: rgba(203, 213, 225, 0.16);
+        }
+        * {
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 20px;
+        }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: var(--page-bg);
+            background-image:
+                linear-gradient(135deg, rgba(10, 17, 29, 0.90), rgba(13, 29, 43, 0.86)),
+                url('{% static "image/132.avif" %}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+            font-family: Inter, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+        }
+        .header {
+            position: relative;
+            padding: 26px 24px 20px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(10, 17, 29, 0.76);
+            backdrop-filter: blur(16px);
+        }
+        .header-inner {
+            width: min(100%, 1060px);
+            margin: 0 auto;
+        }
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            color: var(--text);
+            font-size: 1.55rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            text-decoration: none;
+        }
+        .brand-mark {
+            display: grid;
+            width: 38px;
+            height: 38px;
+            place-items: center;
+            border-radius: 12px;
+            background: var(--accent);
+            color: #10212a;
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+        .nav-menu {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.96rem;
+        }
+        .nav-menu a {
+            display: inline-flex;
+            align-items: center;
+            min-height: 40px;
+            padding: 7px 14px;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 160ms ease, background 160ms ease, border-color 160ms ease;
+        }
+        .nav-menu a:hover,
+        .nav-menu a:focus-visible {
+            border-color: var(--border);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            outline: none;
+        }
+        .nav-menu .home-link {
+            border-color: rgba(103, 213, 194, 0.4);
+            background: rgba(103, 213, 194, 0.12);
+            color: var(--accent-strong);
+            font-weight: 600;
+        }
+        .nav-menu .home-link:hover,
+        .nav-menu .home-link:focus-visible {
+            background: rgba(103, 213, 194, 0.22);
+            color: #c4fff4;
+        }
+        .site-main {
+            width: min(100% - 40px, 960px);
+            margin: 48px auto 72px;
+        }
+        .page-heading {
+            margin: 0 0 10px;
+            color: var(--text);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            line-height: 1.2;
+            letter-spacing: -0.035em;
+        }
+        .page-intro {
+            margin: 0 0 30px;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+        .article-grid {
+            display: grid;
+            gap: 18px;
+        }
+        .article-card,
+        .blog-post,
+        .empty-state {
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            background: var(--surface);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.20);
+            backdrop-filter: blur(12px);
+        }
+        .article-card {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 220px;
+            min-height: 190px;
+            transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+        }
+        .article-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(103, 213, 194, 0.42);
+            background: var(--surface-hover);
+        }
+        .article-card-content {
+            padding: 24px 26px;
+        }
+        .article-title {
+            margin: 0 0 8px;
+            font-size: 1.3rem;
+            line-height: 1.35;
+        }
+        .article-title a,
+        .article-card a {
+            color: var(--text);
+            text-decoration: none;
+        }
+        .article-title a:hover {
+            color: var(--accent-strong);
+        }
+        .article-date,
+        .blog-post-meta {
+            margin: 0 0 14px;
+            color: var(--accent-strong);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        .article-excerpt {
+            margin: 0;
+            color: var(--muted);
+        }
+        .article-card-image {
+            width: 100%;
+            height: 100%;
+            min-height: 190px;
+            object-fit: cover;
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .blog-post {
+            padding: clamp(24px, 5vw, 48px);
+        }
+        .blog-post-title {
+            margin: 0 0 12px;
+            color: var(--text);
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            line-height: 1.2;
+            letter-spacing: -0.035em;
+        }
+        .blog-post-image {
+            display: block;
+            width: 100%;
+            max-height: 480px;
+            margin: 24px 0;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+        .blog-post-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 16px;
+            margin: 24px 0 32px;
+        }
+        .gallery-item {
+            overflow: hidden;
+            margin: 0;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .gallery-item img {
+            display: block;
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+        }
+        .gallery-item figcaption {
+            padding: 10px 13px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+        .blog-post-content {
+            color: #e0e8f2;
+            font-size: 1.08rem;
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+        }
+        .blog-post-content p {
+            margin: 0 0 1.25em;
+        }
+        .empty-state {
+            padding: 28px;
+            color: var(--muted);
+        }
+        .site-footer {
+            padding: 26px 20px;
+            border-top: 1px solid var(--border);
+            background: rgba(10, 17, 29, 0.82);
+            color: var(--muted);
+            text-align: center;
+        }
+        .site-footer p {
+            margin: 4px 0;
+        }
+        .site-footer strong {
+            color: var(--text);
+        }
+        .site-footer a {
+            color: var(--accent-strong);
+            text-decoration: none;
+        }
+        .site-footer a:hover,
+        .site-footer a:focus-visible {
+            text-decoration: underline;
+        }
+        .back-to-top {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 10;
+            display: grid;
+            width: 50px;
+            height: 50px;
+            place-items: center;
+            border: 1px solid rgba(103, 213, 194, 0.5);
+            border-radius: 15px;
+            background: #173b45;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            color: var(--accent-strong);
+            font-size: 1.6rem;
+            line-height: 1;
+            text-decoration: none;
+            transition: transform 160ms ease, background 160ms ease;
+        }
+        .back-to-top:hover,
+        .back-to-top:focus-visible {
+            transform: translateY(-3px);
+            background: #20565d;
+            color: #c4fff4;
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+        @media (max-width: 620px) {
+            .header {
+                padding: 20px 18px 16px;
+            }
+            .brand {
+                font-size: 1.3rem;
+            }
+            .nav-menu {
+                gap: 5px;
+            }
+            .nav-menu a {
+                min-height: 36px;
+                padding: 6px 10px;
+                font-size: 0.9rem;
+            }
+            .site-main {
+                width: min(100% - 28px, 960px);
+                margin-top: 32px;
+            }
+            .article-card {
+                grid-template-columns: 1fr;
+            }
+            .article-card-image {
+                grid-row: 1;
+                height: 190px;
+                min-height: 0;
+            }
+            .article-card-content {
+                padding: 20px;
+            }
+            .back-to-top {
+                right: 16px;
+                bottom: 16px;
+                width: 46px;
+                height: 46px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header" id="top">
+        <div class="header-inner">
+            <a class="brand" href="{% url 'home' %}">
+                <span class="brand-mark" aria-hidden="true">Б</span>
+                <span>Персональний блог</span>
+            </a>
+            <nav aria-label="Основна навігація">
+                <ul class="nav-menu">
+                    <li><a class="home-link" href="{% url 'home' %}">Головна</a></li>
+                    {% for label, article in navigation_links %}
+                    <li><a href="{{ article.get_absolute_url }}">{{ label }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="site-main">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <p><strong>Лабораторна робота №10</strong></p>
+        <p>Виконав студент групи АКІТР-21 Зелент Владислав</p>
+        <p>Email: <a href="mailto:zelent_vg25@nuwm.edu.ua">zelent_vg25@nuwm.edu.ua</a></p>
+    </footer>
+
+    <a class="back-to-top" href="#top" aria-label="Повернутися нагору" title="Нагору">↑</a>
+</body>
+</html>

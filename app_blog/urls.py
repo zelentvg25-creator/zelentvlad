@@ -9,6 +9,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+# urls.py
     path('', views.HomePageView.as_view(), name='home'),
     path('articles/', views.ArticleList.as_view(), name='articles_list'),  # <-- ТУТ 'articles_list'
     path('articles/category/<slug:slug>/', views.ArticleCategoryList.as_view(), name='article_category_list'),
